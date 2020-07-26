@@ -1,10 +1,9 @@
 const Product = require("../models/productsModel");
+const AppError = require('../utils/appError');
 
-exports.getProducts = async (req, res, next) => {
+exports.getAllProducts = async (req, res, next) => {
     try {
         let query = Product.find();
-
-
 
         //* sorting 
         if (req.query.sort) {
@@ -45,16 +44,17 @@ exports.getProducts = async (req, res, next) => {
             }
         });
     } catch (err) {
-        res.status(400).json({
-            status: "Fail",
-            message: err.message
-        });
+        next(err)
     }
 };
 
 exports.getProduct = async (req, res, next) => {
     try {
         const product = await Product.findById(req.params.id);
+
+        if (!product) {
+            return next(new AppError(`No product found with this id:${req.params.id}`, 404))
+        }
 
         res.status(200).json({
             status: "success",
@@ -63,10 +63,7 @@ exports.getProduct = async (req, res, next) => {
             }
         });
     } catch (err) {
-        res.status(400).json({
-            status: "Fail",
-            message: err.message
-        });
+        next(err);
     }
 
 };
@@ -82,10 +79,7 @@ exports.addProduct = async (req, res, next) => {
             }
         });
     } catch (err) {
-        res.status(400).json({
-            status: "Fail",
-            message: err.message
-        });
+        next(err);
     }
 
 };
@@ -104,10 +98,7 @@ exports.updateProduct = async (req, res, next) => {
             }
         });
     } catch (err) {
-        res.status(400).json({
-            status: "Fail",
-            message: err.message
-        });
+        next(err);
     }
 };
 
@@ -123,10 +114,7 @@ exports.deleteProduct = async (req, res, next) => {
             }
         });
     } catch (err) {
-        res.status(400).json({
-            status: "Fail",
-            message: err.message
-        });
+        next(err);
     }
 };
 

@@ -8,7 +8,7 @@ const router = express.Router();
 
 router
     .route('/')
-    .get(productsController.getProducts)
+    .get(productsController.getAllProducts)
     .post(productsController.addProduct);
 
 
