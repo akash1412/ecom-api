@@ -16,6 +16,7 @@ exports.signup = async (req, res, next) => {
       email: req.body.email,
       password: req.body.password,
       passwordConfirm: req.body.passwordConfirm,
+      passwordChangedAt: req.body.passwordChangedAt,
     });
 
     newUser.password = undefined;
@@ -61,6 +62,51 @@ exports.login = async (req, res, next) => {
       status: 'success',
       token,
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.protect = async (req, res, next) => {
+  try {
+    //1)get token from request header,if not present send error
+    //2)verify token
+    //3)check if the user still exists in the db
+    //4) check if the passwords is changed ,after generating the token
+    //5) Give access to the route
+
+    let token;
+
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith('Bearer')
+    ) {
+      token = req.headers.authorization.split(' ')[1];
+    }
+
+    if (!token) {
+      return next(
+        new AppError('You are not logged in,please login to access', 401)
+      );
+    }
+
+    const decoded = await jwt.verify(token, process.env.JWT_SECRET_KEY);
+
+    const user = await User.findById(decoded.id);
+
+    if (!user) {
+      return next(
+        new AppError('User belonging to this token, no longer exists', 404)
+      );
+    }
+
+    if (!user.changedPasswordAfterGeneratingToken(decoded.iat)) {
+      return next(new AppError('Token Expired,Please login again', 401));
+    }
+
+    req.user = user;
+
+    next();
   } catch (error) {
     next(error);
   }
