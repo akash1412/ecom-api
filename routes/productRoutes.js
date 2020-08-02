@@ -10,12 +10,20 @@ const router = express.Router();
 router
   .route('/')
   .get(authController.protect, productsController.getAllProducts)
-  .post(productsController.addProduct);
+  .post(
+    authController.protect,
+
+    productsController.addProduct
+  );
 
 router
   .route('/:id')
   .get(productsController.getProduct)
   .patch(productsController.updateProduct)
-  .delete(productsController.deleteProduct);
+  .delete(
+    authController.protect,
+    authController.restrictTo('admin'),
+    productsController.deleteProduct
+  );
 
 module.exports = router;

@@ -7,8 +7,16 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide a your name'],
     trim: true,
-    minlength: [5, 'User name should be a greater than {VALUE} characters'],
-    maxlength: [20, 'User name should less than {VALUE} characters'],
+    minlength: [5, 'name length must be greater than 5 characters'],
+    maxlength: [20, 'name length should not contain more than 20 characters'],
+  },
+  role: {
+    type: String,
+    default: 'user',
+    enum: {
+      values: ['user', 'admin'],
+      message: 'Please provide a valid role',
+    },
   },
   email: {
     type: String,
@@ -22,8 +30,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide a password'],
     trim: true,
-    minlength: [8, 'Password length should be greater than {VALUE}'],
-    maxlength: [25, 'Password length shound be less than {VALUE}'],
+    minlength: [8, 'Password length must be minimum of 8 characters'],
+    maxlength: [25, 'Password length shall not excced than 25 characters '],
     select: false,
   },
   passwordConfirm: {
@@ -64,10 +72,13 @@ userSchema.methods.comparePasswords = async function (
 userSchema.methods.changedPasswordAfterGeneratingToken = function (
   JWTtokenIssuedTime
 ) {
-  const changedPasswordAtInSeconds =
-    new Date(this.passwordChangedAt).getTime() / 1000;
+  if (this.passwordChangedAt) {
+    const changedPasswordAtInSeconds =
+      new Date(this.passwordChangedAt).getTime() / 1000;
+    return JWTtokenIssuedTime > changedPasswordAtInSeconds;
+  }
 
-  return JWTtokenIssuedTime > changedPasswordAtInSeconds;
+  return true;
 };
 
 const User = mongoose.model('User', userSchema);

@@ -16,7 +16,7 @@ exports.signup = async (req, res, next) => {
       email: req.body.email,
       password: req.body.password,
       passwordConfirm: req.body.passwordConfirm,
-      passwordChangedAt: req.body.passwordChangedAt,
+      role: req.body.role,
     });
 
     newUser.password = undefined;
@@ -110,4 +110,16 @@ exports.protect = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+exports.restrictTo = (role) => {
+  return (req, res, next) => {
+    if (!(role === req.user.role)) {
+      return next(
+        new AppError('You are not Authorized to accessed this route', 401)
+      );
+    }
+
+    next();
+  };
 };
