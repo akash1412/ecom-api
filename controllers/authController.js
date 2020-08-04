@@ -1,5 +1,8 @@
-const User = require('../models/userModel');
+const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const User = require('../models/userModel');
+
+const SendEmail = require('../utils/email');
 
 const AppError = require('../utils/appError');
 
@@ -122,4 +125,87 @@ exports.restrictTo = (role) => {
 
     next();
   };
+};
+
+exports.forgotPassword = async (req, res, next) => {
+  //1) get user email
+  // 2) check user exist or not
+  //3)create token
+  //4) send it to email address
+  if (!req.body.email) {
+    return next(new AppError('Please provide your email address', 400));
+  }
+
+  const user = await User.findOne({ email: req.body.email });
+
+  if (!user) {
+    return next(new AppError('User with this email,does not exists', 404));
+  }
+
+  const resetToken = user.createPasswordResetToken();
+
+  await user.save({ validateBeforeSave: false });
+
+  const message = `Forgot Your password? Submit a PATCH request with your new password and 
+  passwordConfirm to:${req.protocol}://localhost:82/api/v1/users/resetPassword/${resetToken}.
+If you didn't forget your password,Please ignore this email`;
+
+  try {
+    await SendEmail({ to: user.email, message });
+  } catch (error) {
+    console.log(error);
+    user.passwordResetToken = undefined;
+    user.passwordResetTokenExpiresIn = undefined;
+
+    user.save({ validateBeforeSave: false });
+
+    return next(
+      new AppError('Error Sending Email,Please try again later.', 500)
+    );
+  }
+
+  res.status(200).json({
+    status: 'success',
+    message: `token sent to email:${user.email}`,
+  });
+};
+
+exports.resetPassword = async (req, res, next) => {
+  try {
+    //1) Verify reset token,
+    //2)get user
+    //)change password
+    //4) send login token again
+
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(req.params.token)
+      .digest('hex');
+
+    const user = await User.findOne({
+      passwordResetToken: hashedToken,
+      passwordResetTokenExpiresIn: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return next(new AppError('Token Expired,Please try again', 400));
+    }
+
+    user.password = req.body.password;
+    user.passwordConfirm = req.body.passwordConfirm;
+    user.passwordResetToken = undefined;
+    user.passwordResetTokenExpiresIn = undefined;
+
+    await user.save();
+
+    let token = createToken(user._id);
+
+    res.status(200).json({
+      status: 'success',
+      message: 'password successfully changed!',
+      token,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
