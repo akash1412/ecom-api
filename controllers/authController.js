@@ -198,12 +198,39 @@ exports.resetPassword = async (req, res, next) => {
 
     await user.save();
 
-    let token = createToken(user._id);
+    res.status(200).json({
+      status: 'success',
+      message: 'password successfully changed!,Please login again',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.updatePassword = async (req, res, next) => {
+  try {
+    //1) confirm previous password
+    //2)updatePassword
+    //3)send JWT token
+
+    const user = await User.findById(req.user._id).select('+password');
+
+    console.log(user);
+
+    if (
+      !(await user.comparePasswords(req.body.currentPassword, user.password))
+    ) {
+      return next(new AppError('passwords do not match', 400));
+    }
+
+    (user.password = req.body.password),
+      (user.passwordConfirm = req.body.passwordConfirm);
+
+    await user.save();
 
     res.status(200).json({
       status: 'success',
-      message: 'password successfully changed!',
-      token,
+      message: 'password updated!,Please login again.',
     });
   } catch (error) {
     next(error);
