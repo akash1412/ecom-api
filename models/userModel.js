@@ -3,56 +3,70 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, 'Please provide a your name'],
-    trim: true,
-    minlength: [5, 'name length must be greater than 5 characters'],
-    maxlength: [20, 'name length should not contain more than 20 characters'],
-  },
-  role: {
-    type: String,
-    default: 'user',
-    enum: {
-      values: ['user', 'admin'],
-      message: 'Please provide a valid role',
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, 'Please provide a your name'],
+      trim: true,
+      minlength: [5, 'name length must be greater than 5 characters'],
+      maxlength: [20, 'name length should not contain more than 20 characters'],
     },
-  },
-  active: {
-    type: Boolean,
-    default: true,
-  },
-  email: {
-    type: String,
-    required: [true, 'Please provide a valid Email'],
-    unique: [true, 'User with this Email already exists'],
-    lowercase: true,
-    trim: true,
-    validate: [validator.isEmail, 'Please provide a valid email'], //<-- shortHand
-  },
-  password: {
-    type: String,
-    required: [true, 'Please provide a password'],
-    trim: true,
-    minlength: [8, 'Password length must be minimum of 8 characters'],
-    maxlength: [25, 'Password length shall not excced than 25 characters '],
-    select: false,
-  },
-  passwordConfirm: {
-    type: String,
-    required: [true, 'Please confirm your password'],
-    validate: {
-      validator: function (val) {
-        return val === this.password;
+    role: {
+      type: String,
+      default: 'user',
+      enum: {
+        values: ['user', 'admin'],
+        message: 'Please provide a valid role',
       },
-      message: 'Passwords do not match',
     },
-  },
-  passwordChangedAt: Date,
+    active: {
+      type: Boolean,
+      default: true,
+    },
+    email: {
+      type: String,
+      required: [true, 'Please provide a valid Email'],
+      unique: [true, 'User with this Email already exists'],
+      lowercase: true,
+      trim: true,
+      validate: [validator.isEmail, 'Please provide a valid email'], //<-- shortHand
+    },
+    password: {
+      type: String,
+      required: [true, 'Please provide a password'],
+      trim: true,
+      minlength: [8, 'Password length must be minimum of 8 characters'],
+      maxlength: [25, 'Password length shall not excced than 25 characters '],
+      select: false,
+    },
+    passwordConfirm: {
+      type: String,
+      required: [true, 'Please confirm your password'],
+      validate: {
+        validator: function (val) {
+          return val === this.password;
+        },
+        message: 'Passwords do not match',
+      },
+    },
+    passwordChangedAt: Date,
 
-  passwordResetToken: String,
-  passwordResetTokenExpiresIn: Date,
+    passwordResetToken: String,
+    passwordResetTokenExpiresIn: Date,
+  },
+  { toJSON: { virtuals: true }, toObject: { virtuals: true } }
+);
+
+userSchema.virtual('cartItems', {
+  ref: 'Cart',
+  foreignField: 'user',
+  localField: '_id',
+});
+
+userSchema.pre(/^find/, function (next) {
+  this.populate({ path: 'cartItems' });
+  next();
 });
 
 userSchema.pre('save', async function (next) {
@@ -69,12 +83,6 @@ userSchema.pre('save', function (next) {
   if (!this.isModified('password') || this.isNew) return next();
 
   this.passwordChangedAt = Date.now() - 1000;
-
-  next();
-});
-
-userSchema.pre(/^find/, function (next) {
-  // this.find({ active: { $ne: false } });
 
   next();
 });

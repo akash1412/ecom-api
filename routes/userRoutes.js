@@ -1,20 +1,15 @@
 const router = require('express').Router();
 const authController = require('../controllers/authController');
+const cartRoutes = require('./cartRoutes');
 const userController = require('../controllers/userController');
+
+router.route('/me').get(authController.protect, userController.getUser);
 
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
 
-router.post(
-  '/forgotPassword',
-  authController.protect,
-  authController.forgotPassword
-);
-router.patch(
-  '/resetPassword/:token',
-  authController.protect,
-  authController.resetPassword
-);
+router.post('/forgotPassword', authController.forgotPassword);
+router.patch('/resetPassword/:token', authController.resetPassword);
 
 router.patch(
   '/updatePassword',

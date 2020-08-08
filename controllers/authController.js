@@ -12,6 +12,25 @@ const createToken = (id) => {
   });
 };
 
+const createSendToken = (res, user, statusCode) => {
+  const token = createToken(user.id);
+
+  res.cookie('jwt', token, {
+    httpOnly: true,
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+  });
+
+  res.status(statusCode).json({
+    status: 'success',
+    data: {
+      user,
+      token,
+    },
+  });
+};
+
 exports.signup = async (req, res, next) => {
   try {
     const newUser = await User.create({
@@ -22,17 +41,16 @@ exports.signup = async (req, res, next) => {
       role: req.body.role,
     });
 
-    newUser.password = undefined;
-
     const token = createToken(newUser._id);
 
-    res.status(201).json({
-      status: 'success',
-      token,
-      data: {
-        user: newUser,
-      },
-    });
+    // res.status(201).json({
+    //   status: 'success',
+    //   token,
+    //   data: {
+    //     user: newUser,
+    //   },
+    // });
+    createSendToken(res, newUser, 201);
   } catch (error) {
     next(error);
   }
@@ -52,8 +70,6 @@ exports.login = async (req, res, next) => {
     }
 
     const user = await User.findOne({ email }).select('+password');
-
-    console.log({ user });
 
     if (!user || !(await user.comparePasswords(password, user.password))) {
       return next(new AppError('Incorrect email or password', 401));
@@ -99,7 +115,7 @@ exports.protect = async (req, res, next) => {
 
     if (!user) {
       return next(
-        new AppError('User belonging to this token, no longer exists', 404)
+        new AppError('The user belonging to this token,no longer exist', 401)
       );
     }
 

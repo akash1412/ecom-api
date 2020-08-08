@@ -8,13 +8,15 @@ const router = express.Router();
 // router.route('/product-stats').get(productsController.productStats)
 
 router
-  .route('/')
-  .get(authController.protect, productsController.getAllProducts)
-  .post(
-    authController.protect,
+  .route('/on-sale')
+  .get(productsController.onSaleProducts, productsController.getAllProducts);
 
-    productsController.addProduct
-  );
+router
+  .route('/')
+  .get(productsController.getAllProducts)
+  .post(authController.protect, productsController.addProduct);
+
+router.route('/s/:type').get(productsController.getAllProducts);
 
 router
   .route('/:id')
@@ -22,7 +24,7 @@ router
   .patch(productsController.updateProduct)
   .delete(
     authController.protect,
-    authController.restrictTo('admin'),
+    // authController.restrictTo('admin'),
     productsController.deleteProduct
   );
 

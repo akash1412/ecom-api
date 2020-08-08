@@ -1,35 +1,22 @@
 const Product = require('../models/productsModel');
+const ApiFeatures = require('../utils/apiFeatures');
 const AppError = require('../utils/appError');
+
+exports.onSaleProducts = (req, res, next) => {
+  req.query.priceDiscount = { gt: 0 };
+  next();
+};
 
 exports.getAllProducts = async (req, res, next) => {
   try {
-    let query = Product.find();
+    let filter = {};
 
-    //* sorting
-    if (req.query.sort) {
-      const sortQuery = req.query.sort.split(',').join(' ');
-      query = query.sort(sortQuery);
-    } else {
-      query = query.sort('createdAt');
-    }
+    if (req.params.type) filter.type = req.params.type;
 
-    // //* Pagination
+    const Query = new ApiFeatures(Product.find(filter), req.query);
+    const Features = Query.filter().sort().limitFields().paginate();
 
-    const page = req.query.page * 1 || 1;
-    const limit = req.query.limit * 1 || 10;
-    const skip = (page - 1) * limit;
-    query = query.skip(skip).limit(limit);
-
-    // Field limiting
-    if (req.query.fields) {
-      const fields = req.query.fields.split(',').join(' ');
-
-      query = query.select(fields);
-    } else {
-      query = query.select('-__v');
-    }
-
-    const products = await query;
+    const products = await Features.query;
 
     res.status(200).json({
       status: 'success',

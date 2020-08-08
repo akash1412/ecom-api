@@ -3,6 +3,7 @@ const morgan = require('morgan');
 
 const productsRouter = require('./routes/productRoutes');
 const userRouter = require('./routes/userRoutes');
+const cartRoutes = require('./routes/cartRoutes');
 
 const searchController = require('./controllers/searchController');
 const globalErrorHandler = require('./controllers/errorController');
@@ -16,8 +17,9 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(express.json());
 
-app.use('/api/v1/products', productsRouter);
+app.use('/api/v1/shop', productsRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/cart', cartRoutes);
 
 //----SEARCH-----//
 app.use('/api/v1/search', searchController.search);
