@@ -20,13 +20,14 @@ const createSendToken = (res, user, statusCode) => {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
+    secure: process.env.NODE_ENV === 'production' ? true : false,
   });
 
   res.status(statusCode).json({
     status: 'success',
+    token,
     data: {
       user,
-      token,
     },
   });
 };
@@ -41,15 +42,6 @@ exports.signup = async (req, res, next) => {
       role: req.body.role,
     });
 
-    const token = createToken(newUser._id);
-
-    // res.status(201).json({
-    //   status: 'success',
-    //   token,
-    //   data: {
-    //     user: newUser,
-    //   },
-    // });
     createSendToken(res, newUser, 201);
   } catch (error) {
     next(error);
@@ -124,6 +116,8 @@ exports.protect = async (req, res, next) => {
     }
 
     req.user = user;
+
+    console.log(req.user);
 
     next();
   } catch (error) {

@@ -2,11 +2,11 @@ const Cart = require('../models/cartModel');
 
 exports.getAllCartItems = async (req, res, next) => {
   try {
-    let filter = {};
+    // let filter = {};
     // only logged in "users" can access allCartProducts,admin can acces all the items
-    if (req.user.role === 'user') filter.user = req.user.id;
+    // if (req.user.role === 'user') filter.user = req.user.id;
 
-    const cartItems = await Cart.find(filter);
+    const cartItems = await Cart.find({ user: req.user.id });
 
     res.status(200).json({
       status: 'success',
@@ -19,10 +19,13 @@ exports.getAllCartItems = async (req, res, next) => {
 
 exports.addItemToCart = async (req, res, next) => {
   try {
-    if (!req.body.product) req.body.product = req.params.productId;
+    if (!req.body.product) req.body.product = req.params.id;
     if (!req.body.user) req.body.user = req.user.id;
 
-    let CartItem = await Cart.findOne({ product: req.body.product });
+    let CartItem = await Cart.findOne({
+      user: req.user.id,
+      product: req.body.product,
+    });
 
     if (!CartItem) {
       CartItem = new Cart(req.body);
@@ -43,7 +46,7 @@ exports.addItemToCart = async (req, res, next) => {
 
 exports.deleteCartItem = async (req, res, next) => {
   try {
-    await Cart.findByIdAndDelete(req.params.productId);
+    await Cart.findByIdAndDelete(req.params.id);
 
     res.status(204).json({
       status: 'success',
@@ -61,6 +64,6 @@ exports.deleteAllCartItems = async (req, res, next) => {
       status: 'success',
     });
   } catch (error) {
-    next();
+    next(error);
   }
 };

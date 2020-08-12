@@ -14,9 +14,10 @@ router
 router
   .route('/')
   .get(productsController.getAllProducts)
-  .post(authController.protect, productsController.addProduct);
+  .post(authController.protect, productsController.createProduct);
 
 router.route('/s/:type').get(productsController.getAllProducts);
+// router.route('/aggregate').get(productsController.getShopProducts);
 
 router
   .route('/:id')

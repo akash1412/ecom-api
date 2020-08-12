@@ -51,7 +51,7 @@ exports.getProduct = async (req, res, next) => {
   }
 };
 
-exports.addProduct = async (req, res, next) => {
+exports.createProduct = async (req, res, next) => {
   try {
     const product = await Product.create(req.body);
     res.status(201).json({
@@ -126,3 +126,30 @@ exports.deleteProduct = async (req, res, next) => {
 //         });
 //     }
 // }
+
+exports.getShopProducts = async (req, res, next) => {
+  try {
+    const products = await Product.aggregate([
+      {
+        $match: { _id: { $ne: null } },
+      },
+      {
+        $group: {
+          _id: '$type',
+        },
+      },
+    ]);
+
+    console.log(products);
+
+    res.status(200).json({
+      status: 'success',
+      results: products.length,
+      data: {
+        products,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
