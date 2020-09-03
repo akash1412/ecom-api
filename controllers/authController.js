@@ -57,6 +57,8 @@ exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
+    console.log(email, password);
+
     if (!email || !password) {
       return next(new AppError('Please provide email and password', 400));
     }

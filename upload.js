@@ -1,47 +1,50 @@
 const fs = require('fs');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const Product = require('./models/productsModel')
 dotenv.config({
-    path: './config.env'
+  path: './config.env',
 });
 
-const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD);
+const Product = require('./models/productsModel');
 
-mongoose.connect(DB, {
+const DB = process.env.DATABASE.replace(
+  '<PASSWORD>',
+  process.env.DATABASE_PASSWORD
+);
+
+mongoose
+  .connect(DB, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => console.log('DB CONNECTED SUCCESSFULY'))
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log('DB CONNECTED SUCCESSFULY'));
 
-const products = JSON.parse(fs.readFileSync(`${__dirname}/data/products.json`, 'utf-8'))
-
-console.log(process.argv)
+const products = JSON.parse(
+  fs.readFileSync(`${__dirname}/data/updated.json`, 'utf-8')
+);
 
 const importData = async () => {
-    try {
-        await Product.create(products);
-        console.log('products added succesfully ✔');
-    } catch (error) {
-        console.log(error)
-    }
-
-}
-
+  try {
+    await Product.create(products);
+    console.log('Products added succesfully ✅');
+  } catch (error) {
+    console.log(error);
+    process.exit();
+  }
+};
 
 const deleteData = async () => {
-    try {
-        await Product.deleteMany();
-        console.log('products deleted succesfully ✔');
-    } catch (error) {
-        console.log(error)
-    }
-
-}
-
+  try {
+    await Product.deleteMany();
+    console.log('Products deleted succesfully ✅');
+  } catch (error) {
+    console.log(error);
+    process.exit();
+  }
+};
 
 if (process.argv[2] === '--import') {
-    importData()
-
+  importData();
 } else if (process.argv[2] === '--delete') {
-    deleteData()
+  deleteData();
 }

@@ -7,7 +7,7 @@ const productSchema = new mongoose.Schema({
     required: [true, 'A Product msut have a name'],
     unique: [true, ' Provided name must be Unique '],
     trim: true,
-    minlength: [10, 'A Producr must have have more or equal to 10 Characters'],
+    minlength: [5, 'A Producr must have have more or equal to 10 Characters'],
     maxlength: [40, 'A Producr must have have less or equal to 40 Characters'],
   },
   slug: String,
@@ -15,15 +15,15 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'A Product must have a Price'],
   },
-  priceDiscount: {
-    type: Number,
-    validate: {
-      validator: function (val) {
-        return val < this.price;
-      },
-      message: 'discount price {VALUE} must be less than actual price',
-    },
-  },
+  // priceDiscount: {
+  //   type: Number,
+  //   validate: {
+  //     validator: function (val) {
+  //       return val < this.price;
+  //     },
+  //     message: 'discount price {VALUE} must be less than actual price',
+  //   },
+  // },
   description: {
     type: String,
     // required: {
@@ -37,8 +37,7 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please mention product type'],
   },
-  coverImage: String,
-  images: [String],
+  Image: String,
 
   createdAt: {
     type: Date,
