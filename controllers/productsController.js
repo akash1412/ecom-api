@@ -1,7 +1,7 @@
 const Product = require('../models/productsModel');
 const ApiFeatures = require('../utils/apiFeatures');
 const AppError = require('../utils/appError');
-const cloudinary = require('../utils/cloudinary');
+// const cloudinary = require('../utils/cloudinary');
 
 exports.onSaleProducts = (req, res, next) => {
   req.query.priceDiscount = { gt: 0 };
@@ -23,7 +23,7 @@ exports.getAllProducts = async (req, res, next) => {
     const curPage = req.query.page || 1;
     const totalPages = Math.ceil(count / req.query.limit || 1);
     const hasNextPage = curPage >= totalPages ? false : true;
-    const nextPage = hasNextPage ? curPage * 1 + 1 : '';
+    const nextPage = hasNextPage ? curPage * 1 + 1 : null;
 
     res.status(200).json({
       totalPages,
@@ -64,7 +64,7 @@ exports.getProduct = async (req, res, next) => {
 
 exports.createProduct = async (req, res, next) => {
   try {
-    req.body.photo = await cloudinary.v2.uploader.upload(req.body.photo);
+    // req.body.photo = await cloudinary.v2.uploader.upload(req.body.photo);
 
     const product = await Product.create(req.body);
     res.status(201).json({

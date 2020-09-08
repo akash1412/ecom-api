@@ -114,6 +114,17 @@
     "priceDiscount": 300
   },
   {
+    "name": "Product thirteen",
+    "price": 500,
+    "description": "good Product",
+    "Image": "casual-13.jpg",
+
+    "quantity": 30,
+    "type": "casual",
+    "priceDiscount": 300
+  },
+
+  {
     "name": "Cap 1",
     "price": 200,
     "description": "good Product",
@@ -204,132 +215,191 @@
     "priceDiscount": 300
   },
   {
-    "name": "shoe 1",
-    "price": 110,
+    "name": "Cap 10",
+    "price": 210,
     "description": "good Product",
-    "Image": "shoe-1.jpg",
+    "Image": "cap-10.jpg",
 
     "quantity": 30,
-    "type": "shoe",
+    "type": "cap",
     "priceDiscount": 300
   },
   {
-    "name": "shoe 2",
-    "price": 110,
+    "name": "Cap 11",
+    "price": 150,
     "description": "good Product",
-    "Image": "shoe-2.jpg",
+    "Image": "cap-11.jpg",
 
     "quantity": 30,
-    "type": "shoe",
+    "type": "cap",
     "priceDiscount": 300
   },
   {
-    "name": "shoe 3",
-    "price": 110,
+    "name": "Cap 12",
+    "price": 140,
     "description": "good Product",
-    "Image": "shoe-3.jpg",
+    "Image": "cap-12.jpg",
 
     "quantity": 30,
-    "type": "shoe",
+    "type": "cap",
     "priceDiscount": 300
   },
   {
-    "name": "shoe 4",
-    "price": 110,
+    "name": "Cap 13",
+    "price": 120,
     "description": "good Product",
-    "Image": "shoe-4.jpg",
+    "Image": "cap-13.jpg",
 
     "quantity": 30,
-    "type": "shoe",
+    "type": "cap",
     "priceDiscount": 300
   },
   {
-    "name": "shoe 5",
-    "price": 110,
+    "name": "Cap 14",
+    "price": 160,
     "description": "good Product",
-    "Image": "shoe-5.jpg",
+    "Image": "cap-14.jpg",
 
     "quantity": 30,
-    "type": "shoe",
+    "type": "cap",
     "priceDiscount": 300
   },
   {
-    "name": "shoe 6",
-    "price": 110,
+    "name": "sneaker 1",
+    "price": 500,
     "description": "good Product",
-    "Image": "shoe-6.jpg",
+    "Image": "sneaker-1.jpg",
 
     "quantity": 30,
-    "type": "shoe",
+    "type": "sneaker",
     "priceDiscount": 300
   },
   {
-    "name": "shoe 7",
-    "price": 110,
+    "name": "sneaker 2",
+    "price": 580,
     "description": "good Product",
-    "Image": "shoe-7.jpg",
+    "Image": "sneaker-2.jpg",
 
     "quantity": 30,
-    "type": "shoe",
+    "type": "sneaker",
     "priceDiscount": 300
   },
   {
-    "name": "shoe 8",
-    "price": 110,
+    "name": "sneaker 3",
+    "price": 420,
     "description": "good Product",
-    "Image": "shoe-8.jpg",
+    "Image": "sneaker-3.jpg",
 
     "quantity": 30,
-    "type": "shoe",
+    "type": "sneaker",
     "priceDiscount": 300
   },
   {
-    "name": "shoe 9",
-    "price": 110,
+    "name": "sneaker 4",
+    "price": 790,
     "description": "good Product",
-    "Image": "shoe-9.jpg",
+    "Image": "sneaker-4.jpg",
 
     "quantity": 30,
-    "type": "shoe",
+    "type": "sneaker",
     "priceDiscount": 300
   },
   {
-    "name": "shoe 10",
-    "price": 110,
+    "name": "sneaker 5",
+    "price": 890,
     "description": "good Product",
-    "Image": "shoe-10.jpg",
+    "Image": "sneaker-5.jpg",
 
     "quantity": 30,
-    "type": "shoe",
+    "type": "sneaker",
     "priceDiscount": 300
   },
   {
-    "name": "shoe 11",
-    "price": 110,
+    "name": "sneaker 6",
+    "price": 700,
     "description": "good Product",
-    "Image": "shoe-11.jpg",
+    "Image": "sneaker-6.jpg",
 
     "quantity": 30,
-    "type": "shoe",
+    "type": "sneaker",
     "priceDiscount": 300
   },
   {
-    "name": "shoe 12",
-    "price": 110,
+    "name": "sneaker 7",
+    "price": 620,
     "description": "good Product",
-    "Image": "shoe-12.jpg",
+    "Image": "sneaker-7.jpg",
 
     "quantity": 30,
-    "type": "shoe",
+    "type": "sneaker",
     "priceDiscount": 300
   },
   {
-    "name": "shoe 13",
-    "price": 110,
+    "name": "sneaker 8",
+    "price": 480,
     "description": "good Product",
-    "Image": "shoe-13.jpg",
+    "Image": "sneaker-8.jpg",
+
     "quantity": 30,
-    "type": "shoe",
+    "type": "sneaker",
+    "priceDiscount": 300
+  },
+  {
+    "name": "sneaker 9",
+    "price": 450,
+    "description": "good Product",
+    "Image": "sneaker-9.jpg",
+
+    "quantity": 30,
+    "type": "sneaker",
+    "priceDiscount": 300
+  },
+  {
+    "name": "sneaker 10",
+    "price": 500,
+    "description": "good Product",
+    "Image": "sneaker-10.jpg",
+
+    "quantity": 30,
+    "type": "sneaker",
+    "priceDiscount": 300
+  },
+  {
+    "name": "sneaker 11",
+    "price": 900,
+    "description": "good Product",
+    "Image": "sneaker-11.jpg",
+
+    "quantity": 30,
+    "type": "sneaker",
+    "priceDiscount": 300
+  },
+  {
+    "name": "sneaker 12",
+    "price": 650,
+    "description": "good Product",
+    "Image": "sneaker-12.jpg",
+
+    "quantity": 30,
+    "type": "sneaker",
+    "priceDiscount": 300
+  },
+  {
+    "name": "sneaker 13",
+    "price": 400,
+    "description": "good Product",
+    "Image": "sneaker-13.jpg",
+    "quantity": 30,
+    "type": "sneaker",
+    "priceDiscount": 300
+  },
+  {
+    "name": "sneaker 14",
+    "price": 700,
+    "description": "good Product",
+    "Image": "sneaker-14.jpg",
+    "quantity": 30,
+    "type": "sneaker",
     "priceDiscount": 300
   }
 ]

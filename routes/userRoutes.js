@@ -24,7 +24,7 @@ router.route('/').get(userController.getAllUsers);
 
 router
   .route('/:id')
-  .get(userController.getUser)
+  .get(authController.protect, userController.getUser)
   .delete(userController.deleteUser);
 
 module.exports = router;

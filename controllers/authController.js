@@ -57,8 +57,6 @@ exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    console.log(email, password);
-
     if (!email || !password) {
       return next(new AppError('Please provide email and password', 400));
     }
@@ -118,8 +116,6 @@ exports.protect = async (req, res, next) => {
     }
 
     req.user = user;
-
-    console.log(req.user);
 
     next();
   } catch (error) {

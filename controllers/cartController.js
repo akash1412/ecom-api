@@ -1,4 +1,5 @@
 const Cart = require('../models/cartModel');
+const AppError = require('../utils/appError');
 
 exports.getAllCartItems = async (req, res, next) => {
   try {
@@ -10,7 +11,10 @@ exports.getAllCartItems = async (req, res, next) => {
 
     res.status(200).json({
       status: 'success',
-      cartItems,
+      data: {
+        results: cartItems.length,
+        cartItems,
+      },
     });
   } catch (error) {
     next(error);
@@ -24,7 +28,7 @@ exports.addItemToCart = async (req, res, next) => {
 
     let CartItem = await Cart.findOne({
       user: req.user.id,
-      product: req.body.product,
+      productId: req.body.productId,
     });
 
     if (!CartItem) {
@@ -45,8 +49,23 @@ exports.addItemToCart = async (req, res, next) => {
 };
 
 exports.deleteCartItem = async (req, res, next) => {
+  if (!req.body.user) req.body.user = req.user.id;
+  if (!req.body.productId) req.body.productId = req.params.id;
+
   try {
-    await Cart.findByIdAndDelete(req.params.id);
+    const cartItem = await Cart.findOne(req.body);
+
+    if (!cartItem) {
+      return next(new AppError('cart item with this id not found ', 404));
+    }
+
+    if (cartItem.quantity > 1) {
+      cartItem.quantity = cartItem.quantity - 1;
+
+      await cartItem.save();
+    } else {
+      await cartItem.deleteOne(req.body);
+    }
 
     res.status(204).json({
       status: 'success',
