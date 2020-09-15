@@ -55,6 +55,8 @@ exports.deleteCartItem = async (req, res, next) => {
   try {
     const cartItem = await Cart.findOne(req.body);
 
+    console.log(cartItem);
+
     if (!cartItem) {
       return next(new AppError('cart item with this id not found ', 404));
     }
